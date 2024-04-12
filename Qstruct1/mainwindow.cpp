@@ -27,8 +27,11 @@ MainWindow::MainWindow(QWidget *parent)
         outputTextEdit->setGeometry(100, 350, 600, 400);
 
     // 连接槽函数
-    connect(recommendButton, &QPushButton::clicked, this, &MainWindow::recommendButtonClicked);
-    connect(searchButton, &QPushButton::clicked, this, &MainWindow::searchButtonClicked);
+//    connect(recommendButton, &QPushButton::clicked, this, &MainWindow::recommendButtonClicked);
+    connect(recommendButton, SIGNAL(clicked()),
+            this, SIGNAL(recommendButtonClicked()));
+//    connect(searchButton, &QPushButton::clicked, this, &MainWindow::searchButtonClicked);
+    connect(searchButton, SIGNAL(clicked), this, SLOT(searchButtonClicked()));
 
 
 
