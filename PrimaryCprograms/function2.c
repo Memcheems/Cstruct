@@ -9,7 +9,8 @@
 #define MAX_EDGES 500  // 最大边数
 #define WALKING_SPEED 2.0  // 步行速度，单位：米/秒
 #define BIKING_SPEED 6.0   // 骑行速度，单位：米/秒
-#define DATA_LOCATION ".\\function2_data.txt"  // 数据文件位置
+#define UNIVERSITY_DATA_LOCATION ".\\function2_data_university.txt"  // 学校数据文件位置
+#define SCENIC_DATA_LOCATION ".\\function2_data_scenic.txt"  // 景点数据文件位置
 
 // 节点结构体定义
 typedef struct {
@@ -40,7 +41,15 @@ Graph graph;
 
 // 从文件加载图数据
 void loadGraph(const char* filename) {
-    FILE* file = fopen(DATA_LOCATION, "r");
+    printf("请选择你的兴趣类型:1. 学校 2. 景点\n");
+    int type;
+    scanf("%d", &type);
+    FILE* file;
+    if(type == 1){
+    file = fopen(UNIVERSITY_DATA_LOCATION, "r");
+    }else{
+    file = fopen(SCENIC_DATA_LOCATION, "r");
+    }
     char line[1024];
     bool readingEdges = false;
 
