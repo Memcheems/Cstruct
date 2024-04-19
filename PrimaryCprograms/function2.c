@@ -5,36 +5,41 @@
 #include <stdbool.h>
 #include <string.h>
 
-#define MAX_NODES 100  // 最大节点数
-#define MAX_EDGES 1000  // 最大边数
-#define WALKING_SPEED 2.0  // 步行速度，单位：米/秒
-#define BIKING_SPEED 6.0   // 骑行速度，单位：米/秒
-#define UNIVERSITY_DATA_LOCATION "function2_data_university.txt"  // 学校数据文件位置
-#define SCENIC_DATA_LOCATION "function2_data_scenic.txt"  // 景点数据文件位置
+#define MAX_NODES 100  // 定义最大节点数
+#define MAX_EDGES 1000  // 定义最大边数
+#define WALKING_SPEED 2.0  // 步行速度，单位是米/秒
+#define BIKING_SPEED 6.0   // 自行车速度，单位是米/秒
+#define UNIVERSITY_DATA_LOCATION "function2_data_university.txt"  // 定义大学数据文件的存储路径
+#define SCENIC_DATA_LOCATION "function2_data_scenic.txt"  // 定义景点数据文件的存储路径
 
+// 节点结构定义
 typedef struct {
-    int id;
-    char name[50];
-    double x, y;
+    int id;             // 节点ID
+    char name[50];      // 节点名称
+    double x, y;        // 节点坐标(x, y)
 } Node;
 
+// 边结构定义
 typedef struct {
-    int startNodeId;
-    int endNodeId;
-    double length;
-    double walkCongestion;
-    double bikeCongestion;
-    bool bikeAllowed;
+    int startNodeId;        // 边的起始节点ID
+    int endNodeId;          // 边的终止节点ID
+    double length;          // 边的长度
+    double walkCongestion;  // 步行拥挤度，影响步行速度
+    double bikeCongestion;  // 自行车拥挤度，影响骑行速度
+    bool bikeAllowed;       // 是否允许自行车通过
 } Edge;
 
+// 图结构定义
 typedef struct {
-    Node nodes[MAX_NODES];
-    Edge edges[MAX_EDGES];
-    int nodeCount;
-    int edgeCount;
+    Node nodes[MAX_NODES];  // 节点数组
+    Edge edges[MAX_EDGES];  // 边数组
+    int nodeCount;          // 节点总数
+    int edgeCount;          // 边总数
 } Graph;
 
-Graph graph;
+Graph graph;  // 创建一个图的实例
+
+// 从文件加载图数据
 
 void loadGraph(const char* filename) {
     FILE* file = fopen(filename, "r");
@@ -47,7 +52,7 @@ void loadGraph(const char* filename) {
     }
 
     while (fgets(line, sizeof(line), file)) {
-        if (line[0] == '#') {
+        if (line[0] == '#') { // 读取到'#'，开始读取边信息
             readingEdges = true;
             continue;
         }
@@ -105,10 +110,12 @@ void dijkstra(int startId, double dist[], int prev[]) {
     }
 }
 
+// 计算从一点到另一点的时间
 double getTime(double length, double congestion, double speed) {
-    double realSpeed = speed * congestion;
-    return length / realSpeed;
+    double realSpeed = speed * congestion;  // 实际速度是标准速度与拥挤度的乘积
+    return length / realSpeed;  // 时间 = 距离 / 速度
 }
+
 void printPathTime(int start, int end, int prev[]) {
     if (end == start) {
         printf("节点 %d (%s)", graph.nodes[start].id, graph.nodes[start].name);
@@ -345,7 +352,7 @@ int main() {
 
     int num_targets = sizeof(targets) / sizeof(targets[0]);
     bool useBike2 = true;  // 是否使用单车策略
-    int TimeOrLength = 0; //0代表选择时间最短策略，1代表选择长度最短策略
+    int TimeOrLength = 0; //0代表选择距离最短策略，1代表选择时间最短策略
 
     findTSPRoute(targets, num_targets, TimeOrLength,useBike2);
     return 0;
